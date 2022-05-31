@@ -10,6 +10,7 @@ const grad = document.getElementById("grad");
 const pol = document.getElementById("pol");
 const godina = document.getElementById("godina");
 const provera = document.getElementById("provera");
+const napomena = document.getElementById("napomena");
 
 const closeForm = function () {
   container.classList.add("hidden");
@@ -20,9 +21,6 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
 
   checkInputs();
-
-  btnSubmit.addEventListener("click", closeForm);
-  overlay.addEventListener("click", closeForm);
 });
 
 function checkInputs() {
@@ -63,11 +61,32 @@ function checkInputs() {
     alert("Niste izabrali pol!");
     return false;
   }
+  const polValue = pol.value.trim();
 
   if (godina.selectedIndex === 0) {
     alert("Izaberite godinu!");
     return false;
   }
+  const godinaValue = godina.value.trim();
+  const napomenaValue = napomena.value.trim();
+
+  //ajax call
+  $.post(
+    "https://62957c0763b5d108c19e95ef.mockapi.io/users",
+    {
+      ime: imeValue,
+      prezime: prezimeValue,
+      adresa: adresaValue,
+      grad: gradValue,
+      pol: polValue,
+      godina: godinaValue,
+      napomena: napomenaValue,
+    },
+    function (response) {
+      overlay.innerHTML = `Uneti korisnik je: ${response.ime} ${response.prezime}`;
+      overlay.classList.remove("hidden");
+    }
+  );
 }
 
 function setErrorFor(input, message) {
